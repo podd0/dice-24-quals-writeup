@@ -40,7 +40,6 @@ Now we can divide the state in four 16bits numbers, retrieve the possible values
 import os
 from pwn import *
 from itertools import product
-from functools import reduce
 
 def advance(state):
 	for i in range(4):
@@ -50,7 +49,6 @@ def advance(state):
 
 
 mods = []
-# r = process("source.py")
 r = remote("mc.ax", 31234)
 
 for i in range(56):
@@ -82,10 +80,9 @@ for j in range(4):
 			good[j] += [cbm]
 	to_check = {x+4 for x in to_check}
 
-it = reduce(product, [range(len(x)) for x in good])
+it = product(*[range(len(x)) for x in good])
 sol = 0
-for (((i0, i1), i2), i3) in it:
-	ind = (i0, i1, i2, i3)
+for ind in it:
 	bm = 0
 	for j in range(4):
 		bm |= good[j][ind[j]]
@@ -111,4 +108,3 @@ for i in range(50):
 	sol = advance(sol)
 r.interactive()
 ```
-
